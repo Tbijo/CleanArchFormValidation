@@ -18,7 +18,7 @@ class MainViewModel(
     private val validatePassword: ValidatePassword = ValidatePassword(),
     private val validateRepeatedPassword: ValidateRepeatedPassword = ValidateRepeatedPassword(),
     private val validateTerms: ValidateTerms = ValidateTerms()
-): ViewModel() {
+) : ViewModel() {
 
     var state by mutableStateOf(RegistrationFormState())
 
@@ -26,7 +26,7 @@ class MainViewModel(
     val validationEvents = validationEventChannel.receiveAsFlow()
 
     fun onEvent(event: RegistrationFormEvent) {
-        when(event) {
+        when (event) {
             is RegistrationFormEvent.EmailChanged -> {
                 state = state.copy(email = event.email)
             }
@@ -58,23 +58,25 @@ class MainViewModel(
             passwordResult,
             repeatedPasswordResult,
             termsResult
+        // If any result has successful false then return false
         ).any { !it.successful }
 
-        if(hasError) {
-            state = state.copy(
-                emailError = emailResult.errorMessage,
-                passwordError = passwordResult.errorMessage,
-                repeatedPasswordError = repeatedPasswordResult.errorMessage,
-                termsError = termsResult.errorMessage
-            )
-            return
-        }
+        state = state.copy(
+            emailError = emailResult.errorMessage,
+            passwordError = passwordResult.errorMessage,
+            repeatedPasswordError = repeatedPasswordResult.errorMessage,
+            termsError = termsResult.errorMessage
+        )
+
+        if (hasError) return
+
+        // If all results are successful form can be sent
         viewModelScope.launch {
             validationEventChannel.send(ValidationEvent.Success)
         }
     }
 
     sealed class ValidationEvent {
-        object Success: ValidationEvent()
+        object Success : ValidationEvent()
     }
 }

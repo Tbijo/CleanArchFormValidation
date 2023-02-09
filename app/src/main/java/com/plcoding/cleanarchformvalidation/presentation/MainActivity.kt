@@ -33,6 +33,7 @@ class MainActivity : ComponentActivity() {
                     val viewModel = viewModel<MainViewModel>()
                     val state = viewModel.state
                     val context = LocalContext.current
+
                     LaunchedEffect(key1 = context) {
                         viewModel.validationEvents.collect { event ->
                             when (event) {
@@ -46,12 +47,14 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
+
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(32.dp),
                         verticalArrangement = Arrangement.Center
                     ) {
+
                         TextField(
                             value = state.email,
                             onValueChange = {
@@ -66,6 +69,7 @@ class MainActivity : ComponentActivity() {
                                 keyboardType = KeyboardType.Email
                             )
                         )
+
                         if (state.emailError != null) {
                             Text(
                                 text = state.emailError,
@@ -73,6 +77,7 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.align(Alignment.End)
                             )
                         }
+
                         Spacer(modifier = Modifier.height(16.dp))
 
                         TextField(
@@ -88,8 +93,10 @@ class MainActivity : ComponentActivity() {
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Password
                             ),
+                            // password dots
                             visualTransformation = PasswordVisualTransformation()
                         )
+
                         if (state.passwordError != null) {
                             Text(
                                 text = state.passwordError,
@@ -97,6 +104,7 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.align(Alignment.End)
                             )
                         }
+
                         Spacer(modifier = Modifier.height(16.dp))
 
                         TextField(
@@ -114,6 +122,7 @@ class MainActivity : ComponentActivity() {
                             ),
                             visualTransformation = PasswordVisualTransformation()
                         )
+
                         if (state.repeatedPasswordError != null) {
                             Text(
                                 text = state.repeatedPasswordError,
@@ -121,20 +130,25 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.align(Alignment.End)
                             )
                         }
+
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Row(
                             modifier = Modifier.fillMaxWidth()
                         ) {
+
                             Checkbox(
                                 checked = state.acceptedTerms,
                                 onCheckedChange = {
                                     viewModel.onEvent(RegistrationFormEvent.AcceptTerms(it))
                                 }
                             )
+
                             Spacer(modifier = Modifier.width(8.dp))
+
                             Text(text = "Accept terms")
                         }
+
                         if (state.termsError != null) {
                             Text(
                                 text = state.termsError,

@@ -11,6 +11,8 @@ class ValidateEmail {
                 errorMessage = "The email can't be blank"
             )
         }
+        // there should be an abstraction because of Patterns
+        // Otherwise this test has to be in Instrumented tests because Patterns comes from android lib.
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             return ValidationResult(
                 successful = false,
